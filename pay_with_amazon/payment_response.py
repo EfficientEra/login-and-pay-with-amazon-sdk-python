@@ -42,7 +42,7 @@ class PaymentResponse(object):
             self._response_type = self._root.tag.replace(self._ns, '')
         except:
             raise ValueError({'message': 'Invalid XML.',
-                              'xml': str(xml)})
+                              'xml': xml})
 
         """There is a bug where 'eu' endpoint returns ErrorResponse XML node
         'RequestID' with capital 'ID'. 'na' endpoint returns 'RequestId'
