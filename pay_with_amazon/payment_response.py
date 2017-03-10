@@ -40,8 +40,19 @@ class PaymentResponse(object):
             self._root = et.fromstring(xml)
             self._ns = self._namespace(self._root)
             self._response_type = self._root.tag.replace(self._ns, '')
-        except:
+        except UnicodeEncodeError:
+            try:
+                self._xml = xml.encode('ascii', 'xmlcharrefreplace').decode()
+                self._root = et.fromstring(self._xml)
+                self._ns = self._namespace(self._root)
+                self._response_type = self._root.tag.replace(self._ns, '')
+            except Exception as e:
+                raise ValueError({'message': 'Invalid XML.',
+                                  'error': e,
+                                  'xml': xml})
+        except Exception as e:
             raise ValueError({'message': 'Invalid XML.',
+                              'error': e,
                               'xml': xml})
 
         """There is a bug where 'eu' endpoint returns ErrorResponse XML node
